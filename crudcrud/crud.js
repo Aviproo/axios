@@ -1,6 +1,6 @@
 let button = document.querySelector(".button");
 let body = document.querySelector("body");
-let main = document.querySelector(".main");
+let ul = document.querySelector(".ul");
 button.addEventListener("click", ButtonClicked);
 
 function ButtonClicked() {
@@ -14,28 +14,39 @@ function ButtonClicked() {
   };
   axios
     .post(
-      "https://crudcrud.com/api/ddcd6265ab1847c4848569071113d31e/AppointmentData",
+      "https://crudcrud.com/api/d56312a79cd84d428069d94b9922dd3f/AppointmentData",
       data
     )
     .then((res) => {
-      main.innerHTML = `<div>Name:${data.name}-email:${data.email}-number:${data.number}<button>Delete</button> <button>Edit</button> </div>`;
+      console.log(res);
     })
     .catch((err) => {
-      main.innerHTML = `<h4>Something went wrong</h4>`;
+      ul.innerHTML = `<h4>Something went wrong</h4>`;
+    });
+  axiosget();
+}
+function axiosget() {
+  axios
+    .get(
+      "https://crudcrud.com/api/d56312a79cd84d428069d94b9922dd3f/AppointmentData"
+    )
+    .then((res) => {
+      let resdata = "";
+      console.log(res);
+      for (let i = 0; i < res.data.length; i++) {
+        resdata += `<li class= "div">${res.data[i].name}-${res.data[i].email}-${res.data[i].number}<button id=${res.data[i]._id} onclick="dlt(this.id)">Delete</button> <button>Edit</button> </li>`;
+      }
+      ul.innerHTML = resdata;
+    })
+    .catch((rej) => {
+      ul.innerHTML = `<h4>Something went wrong</h4>`;
     });
 }
-axios
-  .get(
-    "https://crudcrud.com/api/ddcd6265ab1847c4848569071113d31e/AppointmentData"
-  )
-  .then((res) => {
-    let resdata = "";
-    console.log(res);
-    for (let i = 0; i < res.data.length; i++) {
-      resdata += `<div>Name:${res.data[i].name}-email:${res.data[i].email}-number:${res.data[i].number}<button>Delete</button> <button>Edit</button> </div>`;
-    }
-    main.innerHTML = resdata;
-  })
-  .catch((rej) => {
-    main.innerHTML = `<h4>Something went wrong</h4>`;
-  });
+axiosget();
+
+function dlt(btnId) {
+  axios.delete(
+    `https://crudcrud.com/api/d56312a79cd84d428069d94b9922dd3f/AppointmentData/${btnId}`
+  );
+  document.querySelector(".div").remove();
+}
