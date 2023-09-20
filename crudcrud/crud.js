@@ -14,7 +14,7 @@ function ButtonClicked() {
   };
   axios
     .post(
-      "https://crudcrud.com/api/d56312a79cd84d428069d94b9922dd3f/AppointmentData",
+      "https://crudcrud.com/api/df64dd8c34c94a33840d3620099ee491/AppointmentData",
       data
     )
     .then((res) => {
@@ -24,17 +24,18 @@ function ButtonClicked() {
       ul.innerHTML = `<h4>Something went wrong</h4>`;
     });
   axiosget();
+  location.reload();
 }
 function axiosget() {
   axios
     .get(
-      "https://crudcrud.com/api/d56312a79cd84d428069d94b9922dd3f/AppointmentData"
+      "https://crudcrud.com/api/df64dd8c34c94a33840d3620099ee491/AppointmentData"
     )
     .then((res) => {
       let resdata = "";
-      console.log(res);
+
       for (let i = 0; i < res.data.length; i++) {
-        resdata += `<li class= "div">${res.data[i].name}-${res.data[i].email}-${res.data[i].number}<button id=${res.data[i]._id} onclick="dlt(this.id)">Delete</button> <button>Edit</button> </li>`;
+        resdata += `<li class= "div">${res.data[i].name}-${res.data[i].email}-${res.data[i].number}<button id=${res.data[i]._id} onclick="dlt(this.id)">Delete</button> <button id=${res.data[i]._id} onclick="edit(this.id)" >Edit</button> </li>`;
       }
       ul.innerHTML = resdata;
     })
@@ -46,7 +47,21 @@ axiosget();
 
 function dlt(btnId) {
   axios.delete(
-    `https://crudcrud.com/api/d56312a79cd84d428069d94b9922dd3f/AppointmentData/${btnId}`
+    `https://crudcrud.com/api/df64dd8c34c94a33840d3620099ee491/AppointmentData/${btnId}`
   );
+  document.querySelector(".div").remove();
+}
+function edit(btnId) {
+  axios
+    .get(
+      `https://crudcrud.com/api/df64dd8c34c94a33840d3620099ee491/AppointmentData/${btnId}`
+    )
+    .then((res) => {
+      console.log(res);
+      document.querySelector(".name").value = res.data.name;
+      document.querySelector(".email").value = res.data.email;
+      document.querySelector(".number").value = res.data.number;
+    })
+    .catch((err) => console.log(err));
   document.querySelector(".div").remove();
 }
